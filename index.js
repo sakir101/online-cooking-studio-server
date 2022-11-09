@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const app = express()
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion} = require('mongodb');
+const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
 
 app.use(cors());
@@ -26,12 +26,18 @@ async function run() {
       res.send(services)
     });
 
-    app.get('/allservices', async(req,res) =>{
+    app.get('/allservices', async (req, res) => {
       const query = {};
       console.log(query)
       const cursor = serviceCollection.find();
       const allservices = await cursor.toArray();
       res.send(allservices);
+    });
+
+    app.post('/addservice', async (req, res) => {
+      const order = req.body;
+      const result = await serviceCollection.insertOne(order);
+      res.send(result);
     })
 
   }
