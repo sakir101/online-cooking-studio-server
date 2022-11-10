@@ -6,6 +6,7 @@ var jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 
+//middleware use
 app.use(cors());
 app.use(express.json());
 
@@ -13,6 +14,7 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@clu
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+//JWT token
 function verifyJwt(req, res, next) {
   const authHeader = req.headers.authorization;
 
@@ -44,7 +46,6 @@ async function run() {
 
     app.get('/service', async (req, res) => {
       const query = {};
-      console.log(query)
       const cursor = serviceCollection.find();
       const services = await cursor.limit(3).toArray();
       res.send(services)
@@ -84,13 +85,11 @@ async function run() {
 
     app.get('/onereview', verifyJwt, async (req, res) => {
       const decoded = req.decoded;
-      
-      
-     
-      console.log(req.query.email);
-      // if(decoded.email !== req.query.email){
-      //   res.status(403).send({message: 'Unauthorized access'});
-      // }
+
+      if(decoded.email !== req.query.email){
+        res.status(403).send({message: 'Unauthorized access'});
+      }
+
       const cursor = await reviewCollection.find({ email: { $in: [req.query.email] } })
         ;
       const reviews = await cursor.toArray();
