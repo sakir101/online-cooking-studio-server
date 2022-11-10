@@ -59,6 +59,14 @@ async function run() {
       const cursor = reviewCollection.find().sort({time: -1});
       const reviews = await cursor.toArray();
       res.send(reviews);
+    });
+
+    app.get('/review/:email', async(req,res)=>{
+      const email = req.params.email;
+      const cursor = reviewCollection.find( { email: { $in: ["sakir15-3862@diu.edu.bd"] } } )
+      ;
+      const reviews = await cursor.toArray();
+      res.send(reviews)
     })
 
   }
