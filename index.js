@@ -86,9 +86,9 @@ async function run() {
     app.get('/onereview', verifyJwt, async (req, res) => {
       const decoded = req.decoded;
 
-      if(decoded.email !== req.query.email){
-        res.status(403).send({message: 'Unauthorized access'});
-      }
+      // if(decoded.email !== req.query.email){
+      //   res.status(403).send({message: 'Unauthorized access'});
+      // }
 
       const cursor = await reviewCollection.find({ email: { $in: [req.query.email] } })
         ;
